@@ -1,5 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	http://maven.apache.org/xsd/maven-4.0.0.xsd">
   
 	<modelVersion>4.0.0</modelVersion>
 	
@@ -9,15 +11,31 @@
 
 	<!-- ===== ***** INFORMATIONS MAVEN ***** ===== -->
 
+	<!-- groupId : identifiant de l'organisation gérant le projet. Cet identifiant
+		reprend la notation des packages Java. En général, celui-ci correspond au
+		package de base de l'application, mais ce n'est pas obligatoire. -->
   	<groupId>org.exemple.demo</groupId>
+  	<!-- artifactId : identifiant du projet -->
   	<artifactId>mon-appli</artifactId>
+  	<!-- version : version du projet. Le suffixe -SNAPSHOT veut dire que le
+		code de cette version de l'application n'est pas figé. C'est une version
+		en cours de développement. Par opposition, si la version ne se termine pas
+		par le suffixe -SNAPSHOT, cela signifie qu'il s'agit d'une release de l'application
+		et que son code est figé. Il faudra donc retirer -SNAPSHOT dans le paramètre
+		<version> -->
   	<version>1.0-SNAPSHOT</version>
+  	<!-- packaging : type de packaging devant être généré par Maven (jar, war,
+		ear, ...). -->
   	<packaging>jar</packaging>
+  	<!-- Un projet Maven est identifié par ses coordonnées : groupId:artifactId:version -->
 
 	<!-- ===== ***** INFORMATIONS GENERALES ***** ===== -->
 
+	<!-- name : le nom du projet -->
   	<name>mon-appli</name>
+  	<!-- url : URL du projet ou de l'application en production. -->
   	<url>http://maven.apache.org</url>
+  	<!-- description : la description du projet -->
 	<description>
 		La super application qui sert à faire ceci ou cela...
 	</description>
@@ -37,19 +55,116 @@
                 	<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         	</license>
 	</licenses>
+	
+	<!-- =============================================================== -->
+	<!-- ***** PROPERTIES (=> CONSTANTES DU POM) ***** -->
+	<!-- =============================================================== -->
 
+	<!-- Les properties sont des sortes de constantes. Elles sont remplacées par leur valeur 
+		lors de l'exécution de Maven en utilisant la notation ${maPropriete} (qui sera remplacée 
+		par la valeur de la propriété maPropriete). -->
   	<properties>
-    		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Attention, on doit changer la version "1.8" si un problème survient avec la commande "mvn package" -->
 		<maven.compiler.source>1.8</maven.compiler.source>
-                <maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.target>1.8</maven.compiler.target>
   	</properties>
+  	
+  	<!-- =============================================================== -->
+	<!-- ***** DEPENDENCIES ***** -->
+	<!-- =============================================================== -->
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<!-- =============================================================== -->
+	<!-- ***** PROFILS ***** -->
+	<!-- =============================================================== -->
+	
+	<!-- Creation de deux profiles nommés avec un id -->
+	<profiles>
+		<profile>
+			<id>test</id>
+			<!-- On configure le build propre à chaque environnement, ici profile test -->
+			<build>
+				<resources>
+					<resource>
+						<!-- On précise que l'on utilisera ce fichier en spécifiant l'id test -->
+						<!-- Les fichiers contenus dans src/main/resources/conf-test seront filtrés, c'est à dire 
+							que Maven  va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par 
+							leurs valeurs comme il le fait naturellement dans fichier pom.xml -->
+						<directory>src/main/resources/conf-test</directory>
+						<!-- Les fichiers contenus dans src/main/resources seront filtrés, c'est à dire que Maven 
+ 							va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par leurs valeurs 
+ 							comme il le fait naturellement dans fichier pom.xml -->
+						<filtering>true</filtering>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<!-- On configure le build propre à chaque environnement, ici profile prod -->
+			<build>
+				<resources>
+					<resource>
+						<!-- On précise que l'on utilisera ce fichier en spécifiant l'id prod -->
+						<!-- Les fichiers contenus dans src/main/resources/conf-prod seront filtrés, c'est à dire 
+							que Maven  va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par 
+							leurs valeurs comme il le fait naturellement dans fichier pom.xml -->
+						<directory>src/main/resources/conf-prod</directory>
+						<filtering>true</filtering>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
+	
+	<!-- =============================================================== -->
+	<!-- ***** BUILD ***** -->
+	<!-- =============================================================== -->
 
-  	<dependencies>
-    		<dependency>
-      			<groupId>junit</groupId>
-      			<artifactId>junit</artifactId>
-      			<version>3.8.1</version>
-      			<scope>test</scope>
-    		</dependency>
-  	</dependencies>
+	<build>
+		<!-- Gestion des plugins (version) -->
+		<pluginManagement>
+			<plugins>
+				<!-- Plugin responsable de la génération du fichier JAR -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<!-- Création du Manifest pour la définition de la classe Main -->
+						<manifest>
+							<mainClass>org.exemple.demo.App</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+<!-- 		<resources> -->
+<!-- 			<resource> -->
+<!-- 				Les fichiers contenus dans src/main/resources seront filtrés, c'est à dire que Maven 
+ 					va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par leurs valeurs 
+ 					comme il le fait naturellement dans fichier pom.xml -->
+<!-- 				<directory>src/main/resources</directory> -->
+<!-- 				<filtering>true</filtering> -->
+<!-- 			</resource> -->
+<!-- 		</resources> -->
+	</build>
+	
 </project>
