@@ -97,7 +97,7 @@
 					<resource>
 						<!-- On précise que l'on utilisera ce fichier en spécifiant l'id test -->
 						<!-- Les fichiers contenus dans src/main/resources/conf-test seront filtrés, c'est à dire 
-							que Maven  va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par 
+							que Maven va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par 
 							leurs valeurs comme il le fait naturellement dans fichier pom.xml -->
 						<directory>src/main/resources/conf-test</directory>
 						<!-- Les fichiers contenus dans src/main/resources seront filtrés, c'est à dire que Maven 
@@ -116,7 +116,7 @@
 					<resource>
 						<!-- On précise que l'on utilisera ce fichier en spécifiant l'id prod -->
 						<!-- Les fichiers contenus dans src/main/resources/conf-prod seront filtrés, c'est à dire 
-							que Maven  va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par 
+							que Maven va chercher à l'intérieur de ces fichiers les propriétés et les remplacer par 
 							leurs valeurs comme il le fait naturellement dans fichier pom.xml -->
 						<directory>src/main/resources/conf-prod</directory>
 						<filtering>true</filtering>
